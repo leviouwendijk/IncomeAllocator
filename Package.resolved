@@ -1,0 +1,69 @@
+{
+  "originHash" : "6629af3c70cbc0c05a654baffde5560ced17351d61c4eefc5daee513bba76813",
+  "pins" : [
+    {
+      "identity" : "compositions",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Compositions.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2966d8340238642211efc88a6a91b484a10f450a"
+      }
+    },
+    {
+      "identity" : "economics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Economics.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "3a0813443c3144bcbdb53d29925a8a5f12bc7618"
+      }
+    },
+    {
+      "identity" : "implementations",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Implementations.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "8c20efe7b805216356d1655ea2b80bf3071b8762"
+      }
+    },
+    {
+      "identity" : "interfaces",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Interfaces.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "f0959ed0313b3625af8047c4c053df4882e10229"
+      }
+    },
+    {
+      "identity" : "plate",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/plate.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "f5987dd862c26a48b2f94f70d1fb31af41fdc197"
+      }
+    },
+    {
+      "identity" : "structures",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Structures.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2074a351da3751bde391951a70bacbc08091d180"
+      }
+    },
+    {
+      "identity" : "viewcomponents",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/ViewComponents.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "cb7b1a53a13e4257554243b067f8223e53c43038"
+      }
+    }
+  ],
+  "version" : 3
+}
