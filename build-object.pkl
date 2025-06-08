@@ -8,4 +8,4 @@ version {
 }
 details = "Income allocation utility"
 author = "Levi Ouwendijk"
-update = "https://github.com/leviouwendijk/IncomeAllocator.git"
+update = "https://raw.githubusercontent.com/leviouwendijk/IncomeAllocator/refs/heads/master/build-object.pkl"
