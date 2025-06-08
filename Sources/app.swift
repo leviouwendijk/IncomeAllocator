@@ -8,8 +8,6 @@ import Implementations
 
 @main
 struct ResponderApp: App {
-    @StateObject private var viewmodel = ResponderViewModel()
-
     init() {
         NSWindow.allowsAutomaticWindowTabbing = false
     }
