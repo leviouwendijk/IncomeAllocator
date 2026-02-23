@@ -1,0 +1,11 @@
+uuid = "91C16693-250C-4A30-9D2A-E8A61FDEBAB5"
+name = "IncomeAllocator"
+type = "application"
+version {
+    major = 0
+    minor = 2
+    patch = 1
+}
+details = "Income allocation utility"
+author = "Levi Ouwendijk"
+update = "https://raw.githubusercontent.com/leviouwendijk/IncomeAllocator/refs/heads/master/build-object.pkl"

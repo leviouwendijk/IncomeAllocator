@@ -1,10 +1,18 @@
 uuid = "91C16693-250C-4A30-9D2A-E8A61FDEBAB5"
 name = "IncomeAllocator"
-type = "application"
-version {
-    major = 0
-    minor = 2
-    patch = 1
+types {
+    "application"
+}
+versions {
+    release {
+        major = 0
+        minor = 2
+        patch = 1
+    }
+}
+compile {
+    use = true
+    arguments { "--local" }
 }
 details = "Income allocation utility"
 author = "Levi Ouwendijk"
