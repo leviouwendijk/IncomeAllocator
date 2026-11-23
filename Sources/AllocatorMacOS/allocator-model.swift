@@ -94,6 +94,63 @@ final class AllocatorModel {
         ).result()
     }
 
+    // MARK: loan
+
+    var loanAmountText = ""
+    var loanMonthsText = "12"
+    var loanRateText = "0"
+    /// An account name from the plan, or `externalLender` for borrowing outside it.
+    var loanLender = Account.savings.name
+    var loanExternalName = "Bank"
+    var loanFunding: LoanFunding = .freeCashFlow
+    var loanBalanceText = ""
+
+    static let externalLender = "External"
+
+    var loanLenderValue: Lender {
+        loanLender == Self.externalLender
+            ? .external(loanExternalName)
+            : .account(plan.allocation(for: Account(loanLender))?.account ?? Account(loanLender))
+    }
+
+    var loan: Loan? {
+        guard let amount = (try? IncomeInput.optional(loanAmountText, IncomeInput.amount)) ?? nil,
+              let months = try? IncomeInput.count(loanMonthsText),
+              let rate = try? IncomeInput.percent(loanRateText)
+        else {
+            return nil
+        }
+        return try? Loan(
+            .init(
+                lender: loanLenderValue,
+                principal: amount,
+                months: months,
+                annualRate: rate,
+                funding: loanFunding
+            )
+        )
+    }
+
+    var loanProjection: LoanProjection? {
+        guard let loan, let income else {
+            return nil
+        }
+        return LoanProjection(
+            loan: loan,
+            plan: plan,
+            income: income,
+            startingBalance: (try? IncomeInput.optional(loanBalanceText, IncomeInput.amount)) ?? 0
+        )
+    }
+
+    /// Sets the months to the fewest the free cash flow covers.
+    func fitLoanMonths() {
+        guard let projection = loanProjection, let months = projection.monthsThatFit else {
+            return
+        }
+        loanMonthsText = "\(months)"
+    }
+
     // MARK: actions
 
     /// The parse error for `text`, or `nil` when it is blank or valid.

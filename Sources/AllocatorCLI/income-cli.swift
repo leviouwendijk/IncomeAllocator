@@ -23,6 +23,7 @@ enum IncomeCommand: ArgumentCommand {
         PresetsCommand.self,
         ProjectCommand.self,
         CompoundCommand.self,
+        LoanCommand.self,
     ]
 }
 
@@ -152,4 +153,27 @@ struct TimingValue: ArgumentValue, Hashable {
     static var valueName: String { "beginning|end" }
 
     static func raw(_ value: TimingValue) -> String { value.timing.rawValue }
+}
+
+struct FundingValue: ArgumentValue, Hashable {
+    let funding: LoanFunding
+
+    static var parser: AnyArgumentValueParser<FundingValue> {
+        .init { text in
+            switch Account.key(text) {
+            case "free", "freecashflow", "fcf", "after":
+                return FundingValue(funding: .freeCashFlow)
+            case "before", "beforeallocations", "first", "top":
+                return FundingValue(funding: .beforeAllocations)
+            default:
+                throw ArgumentValueParseError.invalid_value(value: text, type: valueName)
+            }
+        }
+    }
+
+    static var valueName: String { "free|before" }
+
+    static func raw(_ value: FundingValue) -> String {
+        value.funding == .freeCashFlow ? "free" : "before"
+    }
 }

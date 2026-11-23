@@ -20,5 +20,6 @@ enum IncomeTestFlowsSuite: TestFlowRegistry {
         projectionFlow,
         compoundingFlow,
         inputFlow,
+        loanFlow,
     ]
 }

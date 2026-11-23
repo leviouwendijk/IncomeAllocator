@@ -17,14 +17,21 @@ struct AllocatorView: View {
 
                 Divider()
 
-                HStack(alignment: .top, spacing: 0) {
-                    ProjectionPane(model: model)
-                        .frame(maxWidth: .infinity)
-                    Divider()
-                    CompoundingPane(model: model)
-                        .frame(maxWidth: .infinity)
+                TabView {
+                    HStack(alignment: .top, spacing: 0) {
+                        ProjectionPane(model: model)
+                            .frame(maxWidth: .infinity)
+                        Divider()
+                        CompoundingPane(model: model)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .tabItem { Text("Projection") }
+
+                    LoanPane(model: model)
+                        .tabItem { Text("Loan") }
                 }
-                .frame(height: 280)
+                .padding(.top, 8)
+                .frame(height: 320)
             }
         }
         .toolbar {
@@ -127,6 +134,56 @@ private struct InputsPane: View {
                 Picker("Contribution", selection: bindable.timing) {
                     Text("Start of month").tag(Compounding.Timing.beginning)
                     Text("End of month").tag(Compounding.Timing.end)
+                }
+            }
+
+            Section("Loan") {
+                NumberField(
+                    "Amount",
+                    text: bindable.loanAmountText,
+                    prompt: "3.000",
+                    problem: model.problem(model.loanAmountText, IncomeInput.amount)
+                )
+                Picker("From", selection: bindable.loanLender) {
+                    ForEach(model.plan.accounts, id: \.self) { account in
+                        Text(account.name).tag(account.name)
+                    }
+                    Divider()
+                    Text("External").tag(AllocatorModel.externalLender)
+                }
+                if model.loanLender == AllocatorModel.externalLender {
+                    TextField("Lender", text: bindable.loanExternalName)
+                        .multilineTextAlignment(.trailing)
+                } else {
+                    NumberField(
+                        "Current balance",
+                        text: bindable.loanBalanceText,
+                        prompt: "0",
+                        problem: model.problem(model.loanBalanceText, IncomeInput.amount)
+                    )
+                }
+                HStack {
+                    NumberField(
+                        "Months",
+                        text: bindable.loanMonthsText,
+                        prompt: "12",
+                        problem: model.problem(model.loanMonthsText, IncomeInput.count)
+                    )
+                    Button("Fit") {
+                        model.fitLoanMonths()
+                    }
+                    .help("Fewest months the free cash flow covers")
+                    .disabled(model.loanProjection?.monthsThatFit == nil)
+                }
+                NumberField(
+                    "Yearly interest %",
+                    text: bindable.loanRateText,
+                    prompt: "0",
+                    problem: model.problem(model.loanRateText, IncomeInput.percent)
+                )
+                Picker("Repay", selection: bindable.loanFunding) {
+                    Text("From free cash flow").tag(LoanFunding.freeCashFlow)
+                    Text("Before allocations").tag(LoanFunding.beforeAllocations)
                 }
             }
         }
@@ -367,6 +424,106 @@ private struct CompoundingPane: View {
             }
         }
         .padding(20)
+    }
+}
+
+// MARK: - loan
+
+private struct LoanPane: View {
+    let model: AllocatorModel
+
+    var body: some View {
+        if let projection = model.loanProjection {
+            HStack(alignment: .top, spacing: 0) {
+                summary(projection)
+                    .frame(width: 300)
+                Divider()
+                chart(projection)
+                    .frame(maxWidth: .infinity)
+            }
+        } else {
+            ContentUnavailableView(
+                "No loan",
+                systemImage: "arrow.uturn.left.circle",
+                description: Text("Enter an amount under Loan to plan taking from an account and paying it back.")
+            )
+        }
+    }
+
+    private func summary(_ projection: LoanProjection) -> some View {
+        let loan = projection.loan
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("\(model.format.amount(loan.principal)) from \(loan.lender.description)")
+                .font(.headline)
+            Row(label: "Installment", value: model.format.amount(loan.installment), emphasis: true)
+            Row(label: "Months", value: "\(loan.months)")
+            if loan.annualRate > 0 {
+                Row(label: "Interest", value: model.format.amount(loan.totalInterest))
+            }
+            Row(label: "Lowest free cash flow", value: model.format.amount(projection.lowestFreeCashFlow))
+            if projection.fits {
+                if let account = projection.account, let restored = projection.restoredAt {
+                    Label("\(account.name) back on track after period \(restored)", systemImage: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                } else {
+                    Label("Every installment fits", systemImage: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                }
+            } else {
+                Label("Short \(model.format.amount(projection.shortfall)) in total", systemImage: "exclamationmark.triangle.fill")
+                    .foregroundStyle(.orange)
+                if loan.funding == .freeCashFlow, let months = projection.monthsThatFit {
+                    Text("Fits over \(months) months.")
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(20)
+    }
+
+    @ViewBuilder
+    private func chart(_ projection: LoanProjection) -> some View {
+        let periods = projection.periods
+        if projection.account != nil {
+            Chart {
+                ForEach(periods) { period in
+                    if let balance = period.balance {
+                        LineMark(
+                            x: .value("Period", period.period),
+                            y: .value("Balance", balance.double),
+                            series: .value("Series", "With loan")
+                        )
+                        .foregroundStyle(.orange)
+                    }
+                    if let without = period.balanceWithoutLoan {
+                        LineMark(
+                            x: .value("Period", period.period),
+                            y: .value("Balance", without.double),
+                            series: .value("Series", "Without loan")
+                        )
+                        .foregroundStyle(.secondary)
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 3]))
+                    }
+                }
+            }
+            .chartYAxis {
+                AxisMarks(position: .trailing)
+            }
+            .padding(20)
+        } else {
+            Chart(periods.compactMap(\.installment)) { installment in
+                BarMark(
+                    x: .value("Period", installment.period),
+                    y: .value("Outstanding", installment.outstanding.double)
+                )
+                .foregroundStyle(.orange.opacity(0.6))
+            }
+            .chartYAxis {
+                AxisMarks(position: .trailing)
+            }
+            .padding(20)
+        }
     }
 }
 

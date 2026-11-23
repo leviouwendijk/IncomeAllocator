@@ -16,7 +16,7 @@ struct AllocatorApp: App {
     var body: some Scene {
         Window("Income Allocator", id: "allocator") {
             AllocatorView(model: model)
-                .frame(minWidth: 1040, minHeight: 680)
+                .frame(minWidth: 1040, minHeight: 720)
         }
         .windowResizability(.contentMinSize)
         .commands {
