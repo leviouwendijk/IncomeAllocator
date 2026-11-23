@@ -1,0 +1,85 @@
+{
+  "failed" : 0,
+  "failed_names" : [
+
+  ],
+  "generated_at" : "2026-11-23T11:44:19Z",
+  "passed" : 7,
+  "results" : [
+    {
+      "display_name" : "presets",
+      "duration_seconds" : 0.003466010093688965,
+      "name" : "presets",
+      "status" : "passed",
+      "tags" : [
+        "income",
+        "presets"
+      ]
+    },
+    {
+      "display_name" : "distribution",
+      "duration_seconds" : 0.0009360313415527344,
+      "name" : "distribution",
+      "status" : "passed",
+      "tags" : [
+        "distribution",
+        "income"
+      ]
+    },
+    {
+      "display_name" : "bounds",
+      "duration_seconds" : 0.0006089210510253906,
+      "name" : "bounds",
+      "status" : "passed",
+      "tags" : [
+        "cap",
+        "floor",
+        "income"
+      ]
+    },
+    {
+      "display_name" : "plan-validation",
+      "duration_seconds" : 0.0002849102020263672,
+      "name" : "plan-validation",
+      "status" : "passed",
+      "tags" : [
+        "income",
+        "invariant"
+      ]
+    },
+    {
+      "display_name" : "projection",
+      "duration_seconds" : 0.00031507015228271484,
+      "name" : "projection",
+      "status" : "passed",
+      "tags" : [
+        "income",
+        "projection"
+      ]
+    },
+    {
+      "display_name" : "compounding",
+      "duration_seconds" : 0.0003910064697265625,
+      "name" : "compounding",
+      "status" : "passed",
+      "tags" : [
+        "compounding",
+        "income"
+      ]
+    },
+    {
+      "display_name" : "input",
+      "duration_seconds" : 0.0008149147033691406,
+      "name" : "input",
+      "status" : "passed",
+      "tags" : [
+        "income",
+        "input",
+        "parsers"
+      ]
+    }
+  ],
+  "skipped" : 0,
+  "title" : "Income test flows",
+  "total" : 7
+}

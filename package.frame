@@ -1,3 +1,6 @@
 import Executable;
 
-let package: Package = .{ .build = .{ .arguments = ["--products", "IncomeAllocator"] } };
+let package: Package = .{ .deploy = .{ .products = ["income"] } };
+
+// Future: deploy AllocatorMacOS as an .app bundle once sbm can bundle apps.
+// let package: Package = .{ .deploy = .{ .products = ["income", "AllocatorMacOS"] } };
