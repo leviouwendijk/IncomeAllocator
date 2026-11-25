@@ -22,11 +22,11 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/leviouwendijk/Primitives.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/Primitives.git", branch: "master"),
         .package(url: "https://github.com/swift-langs/Parsers.git", branch: "master"),
-        .package(url: "https://github.com/leviouwendijk/Arguments.git", branch: "master"),
-        .package(url: "https://github.com/leviouwendijk/Terminal.git", branch: "master"),
-        .package(url: "https://github.com/leviouwendijk/Clipboard.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/Arguments.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/Terminal.git", branch: "master"),
+        .package(url: "https://github.com/swift-lco/Clipboard.git", branch: "master"),
     ],
     targets: [
         .target(
